@@ -61,7 +61,7 @@ var httpClient = createIPv4PreferringClient()
 
 func extractMetaInformation(meta string) (language, format, size string) {
 	parts := strings.Split(meta, ", ")
-	if len(parts) < 5 {
+	if len(parts) < 4 {
 		return "", "", ""
 	}
 
@@ -172,9 +172,14 @@ func FindBook(query string) ([]*Book, error) {
 		link := e.Attr("href")
 		hash := strings.TrimPrefix(link, "/md5/")
 
+		trimmedFormat := strings.TrimSpace(format)
+		if len(trimmedFormat) > 0 {
+			trimmedFormat = trimmedFormat[1:]
+		}
+
 		book := &Book{
 			Language:  strings.TrimSpace(language),
-			Format:    strings.TrimSpace(format)[1:],
+			Format:    trimmedFormat,
 			Size:      strings.TrimSpace(size),
 			Title:     strings.TrimSpace(title),
 			Publisher: strings.TrimSpace(publisher),
